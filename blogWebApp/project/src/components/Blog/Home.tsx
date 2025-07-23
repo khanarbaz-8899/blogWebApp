@@ -20,7 +20,7 @@ const Home: React.FC = () => {
         const snapshot = await getDocs(q);
         const postsData = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         })) as BlogPost[];
         setPosts(postsData);
       } catch (error) {
@@ -36,8 +36,8 @@ const Home: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <div className="text-center animate-pulse">
+          <div className="rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto animate-spin"></div>
           <p className="mt-4 text-gray-600">Loading posts...</p>
         </div>
       </div>
@@ -45,59 +45,55 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Welcome to BlogSpace
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Discover amazing stories and share your thoughts with the world
-            </p>
-            {currentUser ? (
+      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Welcome to BlogSpace</h1>
+          <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-xl mx-auto">
+            Discover inspiring stories and share your voice with the world.
+          </p>
+          {currentUser ? (
+            <Link
+              to="/create"
+              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-50 transition"
+            >
+              <PenTool className="w-5 h-5" />
+              Write Your Story
+            </Link>
+          ) : (
+            <div className="flex justify-center gap-4 flex-wrap">
               <Link
-                to="/create"
-                className="inline-flex items-center space-x-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                to="/register"
+                className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-50 transition"
               >
-                <PenTool className="h-5 w-5" />
-                <span>Write Your Story</span>
+                Get Started
               </Link>
-            ) : (
-              <div className="space-x-4">
-                <Link
-                  to="/register"
-                  className="inline-flex items-center space-x-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-                >
-                  <span>Get Started</span>
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center space-x-2 border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
-                >
-                  <span>Sign In</span>
-                </Link>
-              </div>
-            )}
-          </div>
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
 
       {/* Blog Posts Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-2">
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+          <div className="flex items-center gap-3">
             <BookOpen className="h-6 w-6 text-blue-600" />
-            <h2 className="text-3xl font-bold text-gray-900">Latest Posts</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Latest Posts</h2>
           </div>
           {currentUser && (
             <Link
               to="/create"
-              className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium shadow hover:bg-blue-700 transition"
             >
-              <PenTool className="h-4 w-4" />
-              <span>Write Post</span>
+              <PenTool className="w-4 h-4" />
+              Write Post
             </Link>
           )}
         </div>
@@ -110,21 +106,21 @@ const Home: React.FC = () => {
             {currentUser && (
               <Link
                 to="/create"
-                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
               >
-                <PenTool className="h-4 w-4" />
-                <span>Create First Post</span>
+                <PenTool className="w-4 h-4" />
+                Create First Post
               </Link>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-fadeIn">
             {posts.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };
