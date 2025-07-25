@@ -73,61 +73,62 @@ const CreateBlog: React.FC = () => {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Please log in to create a post</h2>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-100 to-gray-200">
+        <div className="text-center p-6 bg-white rounded-xl shadow-lg">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">Please log in to create a post</h2>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Post</h1>
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-10">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-8">📝 Create New Post</h1>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Title */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-base font-medium text-gray-700 mb-2">
                 Post Title
               </label>
               <input
                 type="text"
                 id="title"
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter an engaging title for your post"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                placeholder="Enter an engaging title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
 
+            {/* Excerpt */}
             <div>
-              <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="excerpt" className="block text-base font-medium text-gray-700 mb-2">
                 Excerpt (Optional)
               </label>
               <textarea
                 id="excerpt"
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Write a brief description of your post (if left empty, will be auto-generated)"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                placeholder="A short summary for your post..."
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
               />
             </div>
 
+            {/* Cover Image */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cover Image (Optional)
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+              <label className="block text-base font-medium text-gray-700 mb-2">Cover Image (Optional)</label>
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
                 {imagePreview ? (
                   <div className="relative">
                     <img
@@ -138,18 +139,18 @@ const CreateBlog: React.FC = () => {
                     <button
                       type="button"
                       onClick={removeImage}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <Upload className="mx-auto h-10 w-10 text-gray-400" />
                     <div className="mt-4">
                       <label
                         htmlFor="image"
-                        className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="cursor-pointer inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
                       >
                         Choose Image
                       </label>
@@ -161,43 +162,43 @@ const CreateBlog: React.FC = () => {
                         className="hidden"
                       />
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
+                    <p className="mt-2 text-sm text-gray-500">PNG, JPG, GIF up to 10MB</p>
                   </div>
                 )}
               </div>
             </div>
 
+            {/* Content */}
             <div>
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="content" className="block text-base font-medium text-gray-700 mb-2">
                 Content
               </label>
               <textarea
                 id="content"
                 required
                 rows={15}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Write your blog post content here..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                placeholder="Write your blog content here..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
             </div>
 
-            <div className="flex justify-end space-x-4">
+            {/* Buttons */}
+            <div className="flex justify-end gap-4">
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-100 transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                <Save className="h-4 w-4" />
+                <Save className="h-5 w-5" />
                 <span>{loading ? 'Publishing...' : 'Publish Post'}</span>
               </button>
             </div>

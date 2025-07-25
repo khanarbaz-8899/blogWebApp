@@ -4,12 +4,13 @@ import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../contexts/AuthContext';
 import { BlogPost as BlogPostType } from '../../types/blog';
-import { Calendar, User, Edit, Trash2, ArrowLeft } from 'lucide-react';
+import { Calendar, User, ArrowLeft } from 'lucide-react';
 
 const BlogPost: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { currentUser } = useAuth();
@@ -18,7 +19,6 @@ const BlogPost: React.FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       if (!id) return;
-      
       try {
         const postDoc = await getDoc(doc(db, 'posts', id));
         if (postDoc.exists()) {
@@ -34,18 +34,28 @@ const BlogPost: React.FC = () => {
       }
     };
 
+    const fetchImage = async () => {
+      try {
+        const response = await fetch('https://picsum.photos/800/400');
+        setImageUrl(response.url);
+      } catch (err) {
+        console.error('Image fetch failed', err);
+      }
+    };
+
     fetchPost();
+    fetchImage();
   }, [id, navigate]);
 
   const handleDelete = async () => {
     if (!id) return;
-    
     setDeleteLoading(true);
     try {
       await deleteDoc(doc(db, 'posts', id));
       navigate('/');
     } catch (error) {
-      console.error('Error deleting post:', error);
+      console.error('Failed to delete post:', error);
+      alert('Failed to delete post.');
     } finally {
       setDeleteLoading(false);
       setShowDeleteConfirm(false);
@@ -58,127 +68,81 @@ const BlogPost: React.FC = () => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading post...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Post not found</h2>
-          <Link to="/" className="text-blue-600 hover:text-blue-700">
-            Go back to home
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="text-center mt-12">Loading...</div>;
+  if (!post) return <div className="text-center mt-12">Post not found</div>;
 
   const isAuthor = currentUser?.uid === post.authorId;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link
-          to="/"
-          className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-8"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Home</span>
-        </Link>
+    <div className="max-w-4xl mx-auto p-6">
+      <Link to="/" className="text-blue-600 mb-4 inline-block">
+        <ArrowLeft className="inline-block w-4 h-4 mr-1" />
+        Back
+      </Link>
 
-        <article className="bg-white rounded-lg shadow-md overflow-hidden">
-          {post.coverImage && (
-            <div className="h-64 md:h-96 bg-gray-200">
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
+      <article className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="h-64 md:h-96 bg-gray-200">
+          <img
+            src={imageUrl}
+            alt="Random Cover"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="p-6">
+          <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+            <div className="flex gap-4">
+              <span className="flex items-center">
+                <User className="w-4 h-4 mr-1" /> {post.authorName}
+              </span>
+              <span className="flex items-center">
+                <Calendar className="w-4 h-4 mr-1" /> {formatDate(post.createdAt)}
+              </span>
             </div>
-          )}
-
-          <div className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                <div className="flex items-center space-x-1">
-                  <User className="h-4 w-4" />
-                  <span>{post.authorName}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formatDate(post.createdAt)}</span>
-                </div>
+            {isAuthor && (
+              <div className="flex gap-2">
+                <Link to={`/edit/${post.id}`} className="text-blue-500 hover:underline">
+                  Edit
+                </Link>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
               </div>
-
-              {isAuthor && (
-                <div className="flex items-center space-x-2">
-                  <Link
-                    to={`/edit/${post.id}`}
-                    className="flex items-center space-x-1 px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span>Edit</span>
-                  </Link>
-                  <button
-                    onClick={() => setShowDeleteConfirm(true)}
-                    className="flex items-center space-x-1 px-3 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              {post.title}
-            </h1>
-
-            <div className="prose prose-lg max-w-none">
-              <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                {post.content}
-              </div>
-            </div>
+            )}
           </div>
-        </article>
-      </div>
 
-      {/* Delete Confirmation Modal */}
+          <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+          <p className="whitespace-pre-wrap text-gray-700 leading-relaxed">{post.content}</p>
+        </div>
+      </article>
+
+      {/* 🔴 Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Confirm Delete
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this post? This action cannot be undone.
-            </p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
+          <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full text-center">
+            <h2 className="text-lg font-semibold mb-4">
+              Are you sure you want to delete this post?
+            </h2>
+            <div className="flex justify-center gap-4">
               <button
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
               >
-                {deleteLoading ? 'Deleting...' : 'Delete'}
+                {deleteLoading ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+              >
+                Cancel
               </button>
             </div>
           </div>

@@ -36,13 +36,13 @@ const Navbar: React.FC = () => {
 
             {currentUser ? (
               <>
-                <Link
+                {/* <Link
                   to="/create"
                   className="flex items-center space-x-1 px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                 >
                   <PenTool className="h-4 w-4" />
                   <span>Write Post</span>
-                </Link>
+                </Link> */}
                 <Link
                   to="/my-posts"
                   className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"

@@ -46,46 +46,22 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Welcome to BlogSpace</h1>
-          <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-xl mx-auto">
-            Discover inspiring stories and share your voice with the world.
-          </p>
-          {currentUser ? (
-            <Link
-              to="/create"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-50 transition"
-            >
-              <PenTool className="w-5 h-5" />
-              Write Your Story
-            </Link>
-          ) : (
-            <div className="flex justify-center gap-4 flex-wrap">
-              <Link
-                to="/register"
-                className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold shadow hover:bg-blue-50 transition"
-              >
-                Get Started
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-2 border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
-              >
-                Sign In
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
+    {/* Hero Section */}
+<section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+  <div className="max-w-6xl mx-auto px-4 text-center">
+    <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Welcome to BlogSpace</h1>
+    <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-xl mx-auto">
+      Discover inspiring stories and share your voice with the world.
+    </p>
+  </div>
+</section>
 
       {/* Blog Posts Section */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <BookOpen className="h-6 w-6 text-blue-600" />
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Latest Posts</h2>
+            {/* <BookOpen className="h-6 w-6 text-blue-600" /> */}
+            {/* <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Latest Posts</h2> */}
           </div>
           {currentUser && (
             <Link

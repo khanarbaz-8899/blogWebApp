@@ -68,13 +68,13 @@ const MyPosts: React.FC = () => {
             <FileText className="h-6 w-6 text-blue-600" />
             <h1 className="text-3xl font-bold text-gray-900">My Posts</h1>
           </div>
-          <Link
+          {/* <Link
             to="/create"
             className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
           >
             <PenTool className="h-4 w-4" />
             <span>Write New Post</span>
-          </Link>
+          </Link> */}
         </div>
 
         {posts.length === 0 ? (
